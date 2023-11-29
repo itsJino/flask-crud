@@ -30,7 +30,7 @@ def execute_query(query):
         print("Error:", e)
         return False
     
-@app.route("/default")  # Default - Show Data
+@app.route("/read", methods=['GET'])  # Default - Show Data
 def read():
     try:
         cur = mysql.connection.cursor()
