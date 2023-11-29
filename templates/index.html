@@ -69,7 +69,7 @@
             <button type="submit">Display all students</button>
         </form>
 
-        <form id="addStudentForm" enctype="application/json" onsubmit="submitForm(); return false;">
+        <form id="addStudentForm" enctype="application/json" onsubmit="submitForm('write','addStudentForm'); return false;">
             <h2>ADD STUDENT</h2>
 
             <label for="name">Name:</label>
@@ -79,17 +79,17 @@
             <input type="text" id="course" name="course" required><br>
         
             <label for="year">Year:</label>
-            <input type="text" id="year" name="year" required><br>
+            <input type="number" id="year" name="year" required><br>
         
-            <button type="submit">Submit</button>
+            <button type="submit">ADD</button>
         </form>
         
         <script>
-            function submitForm() {
+            function submitForm(path, id) {
                 event.preventDefault();
 
                 // Get form data
-                var formData = new FormData(document.getElementById("addStudentForm"));
+                var formData = new FormData(document.getElementById(id));
                 
 
                 // Create JSON object from FormData
@@ -102,7 +102,7 @@
 
 
                 // Make a POST request using fetch API
-                fetch('/write', {
+                fetch('/' + path, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
