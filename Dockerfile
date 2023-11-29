@@ -24,4 +24,4 @@ ENV MYSQLCLIENT_LDFLAGS "-L/usr/lib/"
 EXPOSE 8080
 
 # Use gunicorn as the WSGI server
-ENTRYPOINT ["gunicorn", "--workers=3", "--bind=0.0.0.0:8080", "app:app"]
+ENTRYPOINT ["gunicorn", "--workers=3", "--bind=0.0.0.0:8080", "flask-crud:app"]
