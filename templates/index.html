@@ -1,125 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            body {
-                font-family: Arial, Helvetica, sans-serif;
+<html>
+<head>
+  <title>Student Management</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <h1>Student Management</h1>
+
+  <h3>Add Student</h3>
+  <form id="addStudentForm">
+    <label for="addName">Name:</label>
+    <input type="text" id="addName" name="name">
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="addEmail" name="email">
+    <br>
+    <button type="button" id="addStudentButton">Add Student</button>
+  </form>
+
+  <h3>Update Student</h3>
+  <form id="updateStudentForm">
+    <label for="studentID">ID:</label>
+    <input type="number" id="id" name="id">
+    <br>
+    <label for="name">Name:</label>
+    <input type="text" id="updateName" name="name">
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="updateEmail" name="email">
+    <br>
+    <button type="button" id="updateStudentButton">Update Student</button>
+  </form>
+
+  <h3>Delete Student</h3>
+  <form id="deleteStudentForm">
+    <label for="name">Name:</label>
+    <input type="text" id="deleteName" name="name">
+    <br>
+    <button type="button" id="deleteStudentButton">Delete Student</button>
+  </form>
+
+  <h3>Student List</h3>
+  <h4> Student ID | Student Name | Student Email</h4>
+  <ul id="studentList"></ul>
+
+  <script>
+    $(document).ready(function() {
+      // Get all students
+      $.ajax({
+        url: '/default',
+        method: 'GET',
+        success: function(response) {
+          var students = response.Results;
+          for (var i = 0; i < students.length; i++) {
+            var student = students[i];
+            var li = $('<li>' + student.ID + '   -   ' + student.Name + '   -   ' + student.Email + '</li>');
+            li.attr('data-id', student.ID);
+            $('#studentList').append(li);
+          }
+        }
+      });
+
+      // Add student
+      $('#addStudentButton').on('click', function() {
+        var name = $('#addName').val();
+        var email = $('#addEmail').val();
+
+        $.ajax({
+          url: '/add',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ name: name, email: email }),
+          success: function(response) {
+            if (response.Result === 'Success') {
+              alert('Student added successfully!');
+              window.location.reload();
+            } else {
+              alert('Error adding student: ' + response.Message);
             }
-        
-            #addStudentForm {
-                border: 1px solid #f1f1f1;
-                padding: 20px;
+          }
+        });
+      });
+
+      // Update student
+      $('#updateStudentButton').on('click', function() {
+        var id = $('#id').val();
+        var name = $('#updateName').val();
+        var email = $('#updateEmail').val();
+
+        $.ajax({
+          url: '/update',
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify({ id: id, name: name, email: email }),
+          success: function(response) {
+            if (response.Result == 'Success') {
+              alert('Student updated successfully!');
+              window.location.reload();
+            } else {
+              alert('Error updating student: ' + response.Message);
             }
+          }
+        });
+      });
 
-            form input {
-                width: 100%;
-                margin: 8px 0;
-                box-sizing: border-box;
+      // Delete student
+      $('#deleteStudentButton').on('click', function() {
+        var name = $('#deleteName').val();
+
+        $.ajax({
+          url: '/delete',
+          method: 'DELETE',
+          contentType: 'application/json',
+          data: JSON.stringify({ name: name }),
+          success: function(response) {
+            if (response.Result === 'Success') {
+              alert('Student deleted successfully!');
+              window.location.reload();
+            } else {
+              alert('Error deleting student: ' + response.Message);
             }
-            
-            form button {
-                background-color: #4CAF50;
-                color: white;
-                width: 50%;
-                padding: 12px 20px;
-                border: none;
-                cursor: pointer;
-                width: 100%;
-            }
-
-            form button:hover {
-                opacity: 0.8;
-            }
-
-            form {
-                border-radius: 5px;
-                background-color: #f2f2f2;
-                padding: 20px;
-                border: 1px solid #f1f1f1;
-                width: 25%;
-                margin: auto;
-                margin-top: 10px;
-            }
-
-            form h2 {
-                color: white;
-                padding: 5px;
-                text-align: center;
-                background-color: #4c7faf;
-            }
-
-            h1 {
-                text-align: center;
-                background-color: #4c7faf;
-                color: white;
-                padding: 5px;              
-            }
-
-
-
-        </style>
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>PYTHON CRUD DATABASE</h1>
-    
-        <form action="/read" method="GET">
-            <button type="submit">Display all students</button>
-        </form>
-
-        <form id="addStudentForm" enctype="application/json" onsubmit="submitForm('write','addStudentForm'); return false;">
-            <h2>ADD STUDENT</h2>
-
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br>
-        
-            <label for="course">Course:</label>
-            <input type="text" id="course" name="course" required><br>
-        
-            <label for="year">Year:</label>
-            <input type="number" id="year" name="year" required><br>
-        
-            <button type="submit">ADD</button>
-        </form>
-        
-        <script>
-            function submitForm(path, id) {
-                event.preventDefault();
-
-                // Get form data
-                var formData = new FormData(document.getElementById(id));
-                
-
-                // Create JSON object from FormData
-                var jsonData = {};
-                formData.forEach(function(value, key){
-                    jsonData[key] = value;
-                });
-                
-                console.log('Form Data:', JSON.stringify(jsonData));
-
-
-                // Make a POST request using fetch API
-                fetch('/' + path, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(jsonData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response data as needed
-                    console.log(data);
-                    alert(data.msg);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error submitting the form.');
-                });
-            }
-        </script>
-    </body>
+          }
+        });
+      });
+    });
+  </script>
+</body>
 </html>
