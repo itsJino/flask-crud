@@ -68,7 +68,7 @@ def delete():
 
     except Exception as e:
         return '{"Result": "Error", "Message": "' + str(e) + '"}'
-
+    
 
 @app.route("/default")  # Default - Show Data
 def read():

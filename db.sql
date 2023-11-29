@@ -1,5 +1,5 @@
-CREATE USER 'jino'@'%' IDENTIFIED BY 'secret';
-GRANT ALL PRIVILEGES ON *.* to 'jino'@'%';
+CREATE USER 'A'@'%' IDENTIFIED BY 'B';
+GRANT ALL PRIVILEGES ON *.* to 'A'@'%';
 
 CREATE DATABASE student; 
 USE student;
