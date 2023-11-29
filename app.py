@@ -7,7 +7,6 @@ mysql = MySQL()
 app = Flask(__name__)
 CORS(app)
 
-# MySQL Instance configurations
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'secret'
 app.config['MYSQL_DB'] = 'student'
@@ -26,7 +25,7 @@ def execute_query(query):
         print("Error:", e)
         return False
 
-@app.route("/add", methods=['POST'])  # Add Student
+@app.route("/add", methods=['POST']) 
 def add():
     name = request.json.get('name')
     email = request.json.get('email')
@@ -41,12 +40,13 @@ def add():
     except Exception as e:
         return '{"Result": "Error", "Message": "' + str(e) + '"}'
 
-@app.route("/update", methods=['PUT'])  # Update Student
+@app.route("/update", methods=['PUT']) 
 def update():
+    id = int(request.json.get('id'))
+    name = request.json.get('name')
+    email = request.json.get('email')
     try:
-        id = int(request.form.get('id'))
-        name = request.json.get('name')
-        email = request.json.get('email')
+
 
         query = '''UPDATE students SET studentName = '{}', email = '{}' WHERE studentID = {} ;'''.format(name, email, id)
         print("Received Update Request. ID:", id, "Name:", name, "Email:", email)
@@ -56,11 +56,10 @@ def update():
     except Exception as e:
         return '{"Result": "Error", "Message": "' + str(e) + '"}'
 
-@app.route("/delete", methods=['DELETE'])  # Delete Student
+@app.route("/delete", methods=['DELETE'])  
 def delete():
+    name = request.json.get('name')
     try:
-        name = request.args.get('deleteName')
-
         query = '''DELETE FROM students WHERE studentName='{}';'''.format(name)
         success = execute_query(query)
         print(success)
@@ -68,9 +67,9 @@ def delete():
 
     except Exception as e:
         return '{"Result": "Error", "Message": "' + str(e) + '"}'
-    
 
-@app.route("/default")  # Default - Show Data
+
+@app.route("/default")  
 def read():
     try:
         cur = mysql.connection.cursor()
