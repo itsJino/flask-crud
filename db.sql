@@ -1,13 +1,12 @@
-CREATE USER 'jino'@'%' IDENTIFIED BY 'secret';
-GRANT ALL PRIVILEGES ON *.* to 'jino'@'%';
+CREATE USER 'A'@'%' IDENTIFIED BY 'B';
+GRANT ALL PRIVILEGES ON *.* to 'A'@'%';
 
 CREATE DATABASE student; 
 USE student;
-
-CREATE TABLE students (studentID INT NOT NULL AUTO_INCREMENT, studentName VARCHAR(255), course VARCHAR(255), year INT,
+CREATE TABLE students (studentName VARCHAR(255), email VARCHAR(255), studentID INT NOT NULL AUTO_INCREMENT,
 PRIMARY KEY(studentID));
 
-INSERT INTO students (studentName, course, year) values ("first student", "Computer Science", 1); 
-INSERT INTO students (studentName, course, year) values ("second student", "Physics", 3);
-
+INSERT INTO students (studentName, email) values ("first student", "firststudent@mydomain.ie"); 
+INSERT INTO students (studentName, email) values ("second student", "secondstudent@mydomain.ie ");
+SELECT * FROM students;
 exit;
