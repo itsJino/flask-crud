@@ -4,12 +4,12 @@ FROM python:3.8-alpine
 RUN apk add --no-cache mariadb-dev build-base pkgconf
 
 # Install application requirements
-COPY requirements.txt /app/requirements.txt
-WORKDIR /app
+COPY requirements.txt /flask-crud/requirements.txt 
+WORKDIR /flask-crud
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Copy application files
-COPY . /app
+COPY . /flask-crud
 
 # Set environment variables
 ENV MYSQL_USER jino
